@@ -32,13 +32,13 @@ public class CartService {
     @Autowired
     private UserRepository userRepository;
 
-    public void addProductToCart(CreateCartRequest dto) {
+    public void addProductToCart(CreateCartRequest dto,Long user_id,Long product_id) {
 
-    User user = userRepository.findById(dto.getUser_id())
+    User user = userRepository.findById(user_id)
             .orElseThrow(() -> new ResourceNotFoundException(" User not found"));
     Cart cart =  cartRepository.findByUser(user);
-    Product product = productRepository.findById(dto.getProduct_id())
-            .orElseThrow(() -> new ResourceNotFoundException(" " + dto.getProduct_id() + " Product id not found"));
+    Product product = productRepository.findById(product_id)
+            .orElseThrow(() -> new ResourceNotFoundException(" " + product_id + " Product id not found"));
     Integer quantity = dto.getQuantity();
 
     CartItem cartItem = new CartItem();

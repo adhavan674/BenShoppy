@@ -8,9 +8,6 @@ import lombok.Data;
 @Data
 public class CreateCartRequest {
 
-    private Long user_id;
-    @NotNull
-    private Long product_id;
     @NotNull
     @Min(1)
     private Integer quantity;
