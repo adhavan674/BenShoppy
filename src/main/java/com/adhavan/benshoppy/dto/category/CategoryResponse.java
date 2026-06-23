@@ -4,6 +4,9 @@ import lombok.Data;
 
 @Data
 public class CategoryResponse {
-    private Long id;
-    private String name;
+
+    Long id;
+    String name;
+    String url;
+
 }

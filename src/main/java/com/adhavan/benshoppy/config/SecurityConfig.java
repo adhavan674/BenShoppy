@@ -34,7 +34,7 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/auth/**","/public/**").permitAll()
+                        auth.requestMatchers("/auth/**","/public/**","/swagger-ui/**","/v3/**").permitAll()
                                 .requestMatchers("/watchlist/**","/cart/**","/order/**","/user/**","/address/**").hasRole("USER")
                                 .requestMatchers("/images/**","/seller/**","/address/**").hasRole("SELLER")
                                 .requestMatchers("/admin/**","/category/**").hasRole("ADMIN")

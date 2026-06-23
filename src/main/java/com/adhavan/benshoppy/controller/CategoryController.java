@@ -1,10 +1,14 @@
 package com.adhavan.benshoppy.controller;
 
-import com.adhavan.benshoppy.dto.category.CategoryImageResponse;
-import com.adhavan.benshoppy.dto.category.CategoryResponse;
-import com.adhavan.benshoppy.dto.category.CreateCategoryRequest;
-import com.adhavan.benshoppy.dto.category.UpdateCategoryRequest;
+import com.adhavan.benshoppy.dto.category.*;
 import com.adhavan.benshoppy.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.security.SecuritySchemes;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,51 +19,55 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Category APIs")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
-    // add category
-    @PostMapping("/category/add")
-    public String addCategory(@ModelAttribute @Valid CreateCategoryRequest dto,
-                              @RequestParam MultipartFile img) throws IOException {
 
-        categoryService.addCategory(dto,img);
+    // add category
+    @Operation(summary = "Add Category")
+    @PostMapping(value = "/admin/category" ,
+             consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String addCategory(@ModelAttribute @Valid CreateCategoryRequest dto) throws IOException {
+
+        categoryService.addCategory(dto);
 
         return "Added Success";
 
     }
-    // get all categories
-    @GetMapping("/categories")
-    public List<CategoryResponse> getAllCategory(){
 
-      return categoryService.getCategories();
 
-    }
-
-    // get all categories
-    @GetMapping("/public/categories/image")
-    public List<CategoryImageResponse> getAllCategoryWithImage(){
+    // get all categories with images
+    @Operation(summary = "Get All Categories")
+    @GetMapping("/public/categories")
+    public List<CategoryResponse> getAllCategoryWithImage(){
 
         return categoryService.getCategoriesWithImages();
 
     }
 
-    // update category name
-    @PatchMapping("/category/{id}")
-    public String updateCategory(@Valid @ModelAttribute UpdateCategoryRequest dto ,
-            @RequestParam(required = false) MultipartFile img, @PathVariable Long id) throws IOException {
+    // update category name and img
 
-        categoryService.updateCategory(dto,id,img);
+    @Operation(summary = "Update Category", description = " Can update Only name or only image or both , Dont use Tick for Image")
+    @PatchMapping(value = "/admin/category/{id}",
+    consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE )
+    public String updateCategory(@Valid @ModelAttribute UpdateCategoryRequest dto ,
+            @PathVariable Long id) throws IOException {
+
+        categoryService.updateCategory(id, dto);
 
         return "Updated Success";
 
     }
 
-    // not recommended
 
-    @DeleteMapping("/category/{id}")
+    // delete category only  if no relation
+
+    @Operation(summary = "Delete Category" , description = "Always delete the No relation Category")
+    @DeleteMapping("/admin/category/{id}")
     public String deleteCategory(@PathVariable Long id){
         categoryService.deleteById(id);
 
