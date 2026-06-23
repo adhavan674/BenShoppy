@@ -7,10 +7,12 @@ import com.adhavan.benshoppy.dto.auth.LoginRequest;
 import com.adhavan.benshoppy.dto.user.SummaryUserOrSellerResponse;
 import com.adhavan.benshoppy.dto.user.SummaryUserResponse;
 import com.adhavan.benshoppy.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Signup And Login APIs")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
