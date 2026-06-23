@@ -52,12 +52,12 @@ public class CategoryController {
     // update category name and img
 
     @Operation(summary = "Update Category", description = " Can update Only name or only image or both , Dont use Tick for Image")
-    @PatchMapping(value = "/admin/category/{id}",
+    @PatchMapping(value = "/admin/category/{category_id}",
     consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE )
     public String updateCategory(@Valid @ModelAttribute UpdateCategoryRequest dto ,
-            @PathVariable Long id) throws IOException {
+            @PathVariable Long category_id) throws IOException {
 
-        categoryService.updateCategory(id, dto);
+        categoryService.updateCategory(category_id , dto);
 
         return "Updated Success";
 
@@ -67,9 +67,9 @@ public class CategoryController {
     // delete category only  if no relation
 
     @Operation(summary = "Delete Category" , description = "Always delete the No relation Category")
-    @DeleteMapping("/admin/category/{id}")
-    public String deleteCategory(@PathVariable Long id){
-        categoryService.deleteById(id);
+    @DeleteMapping("/admin/category/{category_id}")
+    public String deleteCategory(@PathVariable Long category_id){
+        categoryService.deleteById(category_id);
 
         return "category deleted successFully";
 
