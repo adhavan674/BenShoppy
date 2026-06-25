@@ -47,77 +47,52 @@ public class ProductService {
     private ProductImageRepository productImageRepository;
 
     @Transactional
-    public void addProduct(CreateProductRequest dto, MultipartFile thumbnail, List<MultipartFile> images) throws IOException {
+    public void addProduct(Long seller_id, Long category_id,CreateProductRequest dto) throws IOException {
 
-      User user = userRepository.findById(dto.getUser_id())
-               .orElseThrow(() -> new ResourceNotFoundException(" User Not Found"));
-      Category category = categoryRepository.findById(dto.getCategory_id())
-              .orElseThrow(() -> new ResourceNotFoundException(" " +  dto.getCategory_id() + " Category Not Found"));
+        User user = userRepository.findById(seller_id)
+                .orElseThrow(() -> new ResourceNotFoundException(" User Not Found"));
+        Category category = categoryRepository.findById(category_id)
+                .orElseThrow(() -> new ResourceNotFoundException(" " + category_id + " Category Not Found"));
 
-      if(thumbnail.isEmpty()){
-          throw new RequestImageNotFound(" thumbnail is missing");
-      }
+        if(dto.getThumbnail()==null || dto.getThumbnail().isEmpty() || dto.getImages()==null || dto.getImages().isEmpty()){
+            throw new IllegalArgumentException("Thumbnail and at least one product image is required");
+        }
+        for (MultipartFile img : dto.getImages()){
+            if(img.isEmpty()){
+                throw new IllegalArgumentException("Product image Cannot be empty ");
+            }
+        }
 
+        Product newproduct = productMapper.CreateProductToProduct(dto);
+        newproduct.setUser(user);
+        newproduct.setCategory(category);
+        newproduct.setStatus(Status.ACTIVE);
 
-      if(images==null || images.isEmpty()){
+        String folder = "uploads/thumbnail";
+        String filename = UUID.randomUUID() + "_" + dto.getThumbnail().getOriginalFilename();
+        Path path = Paths.get(folder, filename);
+        dto.getThumbnail().transferTo(path);
+        newproduct.setThumbnail("/thumbnail/" + filename);
 
+        Product pro = productRepository.save(newproduct);
 
-
-          Product newproduct =  productMapper.CreateProductToProduct(dto);
-          newproduct.setUser(user);
-          newproduct.setCategory(category);
-          newproduct.setStatus(Status.ACTIVE);
-
-          String folder = "uploads/thumbnail";
-          String filename = UUID.randomUUID()+ "_" + thumbnail.getOriginalFilename();
-          Path path = Paths.get(folder,filename);
-          thumbnail.transferTo(path);
-
-          newproduct.setThumbnail("/thumbnail/"+filename);
-
-          productRepository.save(newproduct);
-
-      }else {
-
-
-          Product newproduct =  productMapper.CreateProductToProduct(dto);
-          newproduct.setUser(user);
-          newproduct.setCategory(category);
-          newproduct.setStatus(Status.ACTIVE);
-
-          String folder = "uploads/thumbnail";
-          String filename = UUID.randomUUID() +"_"+ thumbnail.getOriginalFilename();
-          Path path = Paths.get(folder,filename);
-          thumbnail.transferTo(path);
-          newproduct.setThumbnail("/thumbnail/"+filename);
-
-          Product pro = productRepository.save(newproduct);
-
-          for (MultipartFile image : images){
-
-              if(image.isEmpty()){
-                  continue;
-              }
-
-              String imageFolder = "uploads/productImage";
-              String imageName = UUID.randomUUID()+"_"+image.getOriginalFilename();
-              Path path1 = Paths.get(imageFolder,imageName);
-              image.transferTo(path1);
-
-              ProductImage img = new ProductImage();
-              img.setUrl("/productImage/"+imageName);
-              img.setProduct(pro);
-
-              productImageRepository.save(img);
-
-          }
+        for (MultipartFile image : dto.getImages()) {
 
 
+            String imageFolder = "uploads/productImage";
+            String imageName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+            Path path1 = Paths.get(imageFolder, imageName);
+            image.transferTo(path1);
 
-      }
+            ProductImage img = new ProductImage();
+            img.setUrl("/productImage/" + imageName);
+            img.setProduct(pro);
+
+            productImageRepository.save(img);
+
+        }
 
     }
-
     public List<SummaryProductResponse> getProductByStatus(Long id,Status status) {
 
         User user = userRepository.findById(id)
@@ -176,10 +151,10 @@ public class ProductService {
 
     }
 
-    public void updateProduct(UpdateProductRequest dto, MultipartFile thumbnail,Long id) throws IOException {
+    public void updateProduct(Long product_id,UpdateProductRequest dto) throws IOException {
 
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(" " +  id + " Product Not Found"));
+        Product product = productRepository.findById(product_id)
+                .orElseThrow(() -> new ResourceNotFoundException(" " +  product_id + " Product Not Found"));
 
         if(dto.getName()!=null){
             product.setName(dto.getName());
@@ -200,7 +175,7 @@ public class ProductService {
             product.setCategory(category);
         }
 
-        if(thumbnail!=null && !thumbnail.isEmpty()){
+        if(dto.getThumbnail()!=null && !dto.getThumbnail().isEmpty()){
 
             String oldFile = product.getThumbnail().substring(10);
             String folder = "uploads/thumbnail";
@@ -208,9 +183,9 @@ public class ProductService {
             Files.deleteIfExists(path);
 
 
-            String filename = UUID.randomUUID() +"_"+ thumbnail.getOriginalFilename();
+            String filename = UUID.randomUUID() +"_"+ dto.getThumbnail().getOriginalFilename();
             Path paths = Paths.get(folder,filename);
-            thumbnail.transferTo(paths);
+            dto.getThumbnail().transferTo(paths);
             product.setThumbnail("/thumbnail/"+filename);
         }
 

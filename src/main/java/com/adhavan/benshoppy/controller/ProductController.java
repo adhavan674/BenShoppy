@@ -5,6 +5,9 @@ import com.adhavan.benshoppy.dto.user.UpdateStatusRequest;
 import com.adhavan.benshoppy.entity.Product;
 import com.adhavan.benshoppy.entity.Status;
 import com.adhavan.benshoppy.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,95 +19,102 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@Tag(name = "Product APIs" , description = " Product management APIs ")
+@SecurityRequirement(name = "bearerAuth")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
 
-    @PostMapping("/seller/product") // ok
+    @Operation(summary = "Add Product")
+    @PostMapping(value = "/seller/product/{seller_id}/{category_id}" ,
+            consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE) // ok
     public String addProduct(@Valid @ModelAttribute CreateProductRequest dto,
-                             @RequestParam MultipartFile thumbnail ,
-                             @RequestParam(required = false) List<MultipartFile> images) throws IOException {
+                             @PathVariable Long seller_id,
+                             @PathVariable Long category_id ) throws IOException {
 
-
-        productService.addProduct(dto,thumbnail,images);
+        productService.addProduct(seller_id,category_id,dto);
 
         return "product Added Successfully";
+
     }
-
-    @PatchMapping("/seller/product/{id}")  // ok
+    @Operation(summary = "Update Product")
+    @PatchMapping(value = "/seller/product/{product_id}",
+            consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
     public String updateProduct(@Valid @ModelAttribute UpdateProductRequest dto,
-                                @PathVariable long id,
-                                @RequestParam(required = false) MultipartFile thumbnail) throws IOException {
+                                @PathVariable long product_id ) throws IOException {
 
-        productService.updateProduct(dto, thumbnail, id);
+        productService.updateProduct(product_id,dto);
 
         return "Product updated successfully";
     }
 
     // seller and admin
 
+    @Operation(summary = "Update Product Status", description = "this API can access by SELLER AND ADMIN")
     @PreAuthorize("hasAnyRole('ADMIN',SELLER')")
-    @PatchMapping("/product/{id}/status") // ok
-    public String updateProductStatus(@PathVariable Long id, @RequestBody UpdateStatusRequest dto){
+    @PatchMapping("/product/{product_id}/status") // ok
+    public String updateProductStatus(@PathVariable Long product_id, @RequestBody UpdateStatusRequest dto){
 
-        productService.updateProductStatus(id,dto);
+        productService.updateProductStatus(product_id,dto);
 
         return dto.getStatus() + " updated successfully ";
 
     }
-
-    @PatchMapping("/seller/{id}/price") // ok
-    public String updateProductPrice(@PathVariable Long id,@Valid @RequestBody UpdateProductPrice dto){
-           productService.updateProductPrice(id,dto);
+    @Operation(summary = "Update price for a Product")
+    @PatchMapping("/seller/{product_id}/price") // ok
+    public String updateProductPrice(@PathVariable Long product_id,@Valid @RequestBody UpdateProductPrice dto){
+           productService.updateProductPrice(product_id,dto);
            return " product price updated ";
     }
+    @Operation(summary = "delete Product" ,
+            description = "delete product only if no relation")
+    @DeleteMapping("/seller/product/{product_id}")
+    public String deleteProduct(@PathVariable Long product_id){
 
-    @DeleteMapping("/seller/product/{id}")
-    public String deleteProduct(@PathVariable Long id){
-
-        productService.deleteProduct(id);
+        productService.deleteProduct(product_id);
 
         return "successfully product deleted ";
 
     }
-
-    @GetMapping("/seller/{id}/products") //ok
-    public List<SummaryProductResponse> getProducts(@PathVariable Long id){
-       return productService.getProducts(id);
+    @Operation(summary = "get Seller All Products")
+    @GetMapping("/seller/{seller_id}/products") //ok
+    public List<SummaryProductResponse> getProducts(@PathVariable Long seller_id){
+       return productService.getProducts(seller_id);
     }
 
-    @GetMapping("seller/{id}/latest") // ok
-    public List<SummaryProductResponse> getLatestAddedProduct(@PathVariable Long id){
+    @Operation(summary = "latest Products added by seller")
+    @GetMapping("seller/{seller_id}/latest") // ok
+    public List<SummaryProductResponse> getLatestAddedProduct(@PathVariable Long seller_id){
 
-        return productService.getLatestAdded(id);
-
-    }
-
-    @GetMapping("/seller/{id}/search")
-    public List<SummaryProductResponse> getProductBySearch(@PathVariable Long id,@RequestParam String name){
-
-        return productService.searchProduct(id,name);
+        return productService.getLatestAdded(seller_id);
 
     }
+    @Operation(summary = "search his own products")
+    @GetMapping("/seller/{seller_id}/search")
+    public List<SummaryProductResponse> getProductBySearch(@PathVariable Long seller_id,@RequestParam String name){
 
-    @GetMapping("/seller/{id}") // ok
-    public List<SummaryProductResponse> getProductByStatus(@RequestParam Status status,@PathVariable Long id){
-
-      return productService.getProductByStatus(id,status);
+        return productService.searchProduct(seller_id,name);
 
     }
 
+    @Operation(summary = "Get Products by status")
+    @GetMapping("/seller/{seller_id}") // ok
+    public List<SummaryProductResponse> getProductByStatus(@RequestParam Status status,@PathVariable Long seller_id){
 
-    @GetMapping("/public/{id}/details") // ok
-    public DetailsProductResponse getProductDetails(@PathVariable Long id){
-
-       return productService.getProductDetails(id);
+      return productService.getProductByStatus(seller_id,status);
 
     }
 
 
+    @Operation(summary = "Full details about product")
+    @GetMapping("/public/{product_id}/details") // ok
+    public DetailsProductResponse getProductDetails(@PathVariable Long product_id){
+
+       return productService.getProductDetails(product_id);
+
+    }
 
 
 
@@ -113,26 +123,33 @@ public class ProductController {
 
 
 
+
+    @Operation(summary = "recently added products")
     @GetMapping("/public/latest") //ok
     public List<SummaryProductResponse> getLatestProducts() {
 
         return productService.getLatestProduct();
     }
 
-    @GetMapping("/public/category/{id}") //ok
-    public List<SummaryProductResponse> getProductByCategory(@PathVariable  Long id){
+    @Operation(summary = "Get Products by category")
+    @GetMapping("/public/category/{category_id}")
+    public List<SummaryProductResponse> getProductByCategory(@PathVariable  Long category_id){
 
-        return productService.getProductByCategory(id);
+        return productService.getProductByCategory(category_id);
     }
 
-    @GetMapping("/public/related") // ok
-    public List<SummaryProductResponse> getRelatedProduct(@RequestParam String name,@RequestParam Long id){
+    // need to dubug this
+
+    @Operation(summary = "Related product when viewing full details ")
+    @GetMapping("/public/related")
+    public List<SummaryProductResponse> getRelatedProduct(@RequestParam String name,@RequestParam Long category_id){
         
-        return productService.getByRelatedName(name,id);
+        return productService.getByRelatedName(name,category_id);
 
     }
 
-    @GetMapping("/public/search") // ok
+    @Operation(summary = " product search with name ")
+    @GetMapping("/public/search")
     public Page<SummaryProductResponse> getProductForUser(@RequestParam String name ,
                                            @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "4") int size,
@@ -144,6 +161,7 @@ public class ProductController {
 
     }
 
+    @Operation(summary = "product name suggestion in search box ")
     @GetMapping("/public/textsuggest") //ok
     public List<String> getTextSuggest(@RequestParam String name){
 

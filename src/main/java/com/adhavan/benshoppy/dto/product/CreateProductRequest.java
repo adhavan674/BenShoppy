@@ -29,9 +29,8 @@ public class CreateProductRequest {
     @NotBlank
     @Size(min = 5 ,max = 500)
     private String description;
-    @NotNull
-    private Long category_id;
-    @NotNull
-    private Long user_id;
+
+    private MultipartFile thumbnail;
+    private List<MultipartFile> images;
 
 }

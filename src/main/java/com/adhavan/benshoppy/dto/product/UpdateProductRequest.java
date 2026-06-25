@@ -2,6 +2,7 @@ package com.adhavan.benshoppy.dto.product;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class UpdateProductRequest {
@@ -20,5 +21,7 @@ public class UpdateProductRequest {
     private String description;
 
     private Long category_id;
+
+    private MultipartFile thumbnail;
 
 }
