@@ -15,6 +15,6 @@ public class AdminCountResponse {
     private Long activeUser;
     private Long blockedUser;
     private Long activeSeller;
-    private Long BlockedSeller;
+    private Long blockedSeller;
     private Long totalOrders;
 }

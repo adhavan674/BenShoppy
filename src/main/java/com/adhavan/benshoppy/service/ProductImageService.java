@@ -33,12 +33,16 @@ public class ProductImageService {
     @Autowired
     private ProductMapper productMapper;
 
-    public void deleteImage(Long id){
+    public void deleteImage(Long id) throws IOException {
 
         ProductImage productImage =
                 productImageRepository.findById(id)
                         .orElseThrow(() ->
                                 new ProductImageNotFound("image not found"));
+        String filename = productImage.getUrl();
+        String folder = "uploads";
+        Path path = Paths.get(folder,filename);
+        Files.deleteIfExists(path);
 
         productImageRepository.deleteById(id);
     }
@@ -127,7 +131,6 @@ public class ProductImageService {
                     throw new FileFormatWrongException(" upload image format only or upload image ");
 
                 }
-
 
 
                 String imageFolder = "uploads/productImage";

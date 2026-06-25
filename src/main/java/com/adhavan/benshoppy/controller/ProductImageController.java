@@ -24,7 +24,7 @@ public class ProductImageController {
 
         @Operation(summary = "Delete one image for a Product")
         @DeleteMapping("/{product_image_id}")
-        public String deleteImage(@PathVariable Long product_image_id){
+        public String deleteImage(@PathVariable Long product_image_id) throws IOException {
 
             productImageService.deleteImage(product_image_id);
 
@@ -33,7 +33,8 @@ public class ProductImageController {
 
 
         @Operation(summary = "Change image for a Product ")
-        @PatchMapping("/{product_image_id}")
+        @PatchMapping(value = "/{product_image_id}" ,
+                consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
         public String updateImage(@PathVariable Long product_image_id,
                                   @ModelAttribute MultipartFile image)
                 throws IOException {
@@ -52,7 +53,8 @@ public class ProductImageController {
         }
 
         @Operation(summary = "Add images To Existing Product")
-        @PostMapping("/{product_id}")
+        @PostMapping(value = "/{product_id}" ,
+                consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
         public String addImages(@PathVariable Long product_id,
                                 @ModelAttribute List<MultipartFile> images)
                 throws IOException {

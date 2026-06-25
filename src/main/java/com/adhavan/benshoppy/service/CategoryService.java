@@ -73,9 +73,9 @@ public class CategoryService {
             }
 
 
-        String folder = "uploads/categoryImage" ;
-        String fileName = category.getUrl().substring(9);
-        Path path = Paths.get(folder,fileName); // uploads/categoryImage  /category/hgsjdfgd_adhav.pgb
+        String folder = "uploads" ;
+        String fileName = category.getUrl();
+        Path path = Paths.get(folder,fileName); // uploads + /categoryImage/hgsjdfgd_adhav.pgb
 
         Files.deleteIfExists(path);
 
