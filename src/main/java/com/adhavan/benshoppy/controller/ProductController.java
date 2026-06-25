@@ -2,7 +2,6 @@ package com.adhavan.benshoppy.controller;
 
 import com.adhavan.benshoppy.dto.product.*;
 import com.adhavan.benshoppy.dto.user.UpdateStatusRequest;
-import com.adhavan.benshoppy.entity.Product;
 import com.adhavan.benshoppy.entity.Status;
 import com.adhavan.benshoppy.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -136,7 +134,7 @@ public class ProductController {
         return productService.getProductByCategory(category_id);
     }
 
-   // need debug
+
 
     @Operation(summary = "Related product when viewing full details ")
     @GetMapping("/public/related/{product_id}/{category_id}")

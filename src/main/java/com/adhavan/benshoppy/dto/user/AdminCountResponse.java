@@ -1,6 +1,6 @@
 package com.adhavan.benshoppy.dto.user;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 
 @Data

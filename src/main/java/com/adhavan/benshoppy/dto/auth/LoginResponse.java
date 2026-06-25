@@ -1,7 +1,5 @@
 package com.adhavan.benshoppy.dto.auth;
 
-import jakarta.persistence.Entity;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

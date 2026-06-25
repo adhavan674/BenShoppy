@@ -27,7 +27,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
 
-    // add category
+
     @Operation(summary = "Add Category")
     @PostMapping(value = "/admin/category" ,
              consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -40,7 +40,7 @@ public class CategoryController {
     }
 
 
-    // get all categories with images
+
     @Operation(summary = "Get All Categories")
     @GetMapping("/public/categories")
     public List<CategoryResponse> getAllCategoryWithImage(){
@@ -49,7 +49,7 @@ public class CategoryController {
 
     }
 
-    // update category name and img
+
 
     @Operation(summary = "Update Category", description = " Can update Only name or only image or both , Dont use Tick for Image")
     @PatchMapping(value = "/admin/category/{category_id}",
@@ -64,7 +64,7 @@ public class CategoryController {
     }
 
 
-    // delete category only  if no relation
+
 
     @Operation(summary = "Delete Category" , description = "Always delete the No relation Category")
     @DeleteMapping("/admin/category/{category_id}")

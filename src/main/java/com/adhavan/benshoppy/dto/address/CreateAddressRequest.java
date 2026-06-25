@@ -1,7 +1,6 @@
 package com.adhavan.benshoppy.dto.address;
 
-import com.adhavan.benshoppy.entity.User;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.validation.constraints.*;
 import lombok.Data;
 

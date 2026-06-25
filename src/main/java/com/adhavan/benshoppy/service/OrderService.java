@@ -1,6 +1,5 @@
 package com.adhavan.benshoppy.service;
 
-import com.adhavan.benshoppy.dto.address.AddressResponse;
 import com.adhavan.benshoppy.dto.order.SummaryOrderResponse;
 import com.adhavan.benshoppy.dto.order.UpdateOrderStatus;
 import com.adhavan.benshoppy.entity.*;

@@ -4,8 +4,6 @@ package com.adhavan.benshoppy.controller;
 import com.adhavan.benshoppy.dto.auth.LoginResponse;
 import com.adhavan.benshoppy.dto.auth.SignupRequest;
 import com.adhavan.benshoppy.dto.auth.LoginRequest;
-import com.adhavan.benshoppy.dto.user.SummaryUserOrSellerResponse;
-import com.adhavan.benshoppy.dto.user.SummaryUserResponse;
 import com.adhavan.benshoppy.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

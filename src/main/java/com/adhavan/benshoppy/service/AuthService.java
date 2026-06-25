@@ -5,8 +5,6 @@ import com.adhavan.benshoppy.config.JwtUtil;
 import com.adhavan.benshoppy.dto.auth.LoginResponse;
 import com.adhavan.benshoppy.dto.auth.SignupRequest;
 import com.adhavan.benshoppy.dto.auth.LoginRequest;
-import com.adhavan.benshoppy.dto.user.SummaryUserOrSellerResponse;
-import com.adhavan.benshoppy.dto.user.SummaryUserResponse;
 import com.adhavan.benshoppy.entity.Cart;
 import com.adhavan.benshoppy.entity.Role;
 import com.adhavan.benshoppy.entity.Status;
