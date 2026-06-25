@@ -50,7 +50,7 @@ public class CategoryService {
       Path path = Paths.get(folder,filename);  //   uploads/categoryImage/khfgsdhfg_adhav.jpg
       dto.getImg().transferTo(path);
 
-     category.setUrl("/categoryImage/"+ filename);  //  category/efhidgd_adhav.jpg
+     category.setUrl("/categoryImage/"+ filename);  //  categoryImage/efhidgd_adhav.jpg
      categoryRepository.save(category);
 
     }
