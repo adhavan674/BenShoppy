@@ -3,7 +3,6 @@ package com.adhavan.benshoppy.service;
 import com.adhavan.benshoppy.dto.product.*;
 import com.adhavan.benshoppy.dto.user.UpdateStatusRequest;
 import com.adhavan.benshoppy.entity.*;
-import com.adhavan.benshoppy.globalexception.customexception.RequestImageNotFound;
 import com.adhavan.benshoppy.globalexception.customexception.ResourceNotFoundException;
 import com.adhavan.benshoppy.mapper.ProductMapper;
 import com.adhavan.benshoppy.repository.CategoryRepository;
@@ -223,27 +222,27 @@ public class ProductService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(" " + id + " Category Not Found"));
 
-        List<Product> products = productRepository.findByCategory(category);
+        List<Product> products = productRepository.findByCategoryAndStatus(category,Status.ACTIVE);
 
       return  products.stream().map(productMapper::productToSummary).toList();
 
     }
 
-    public List<SummaryProductResponse> getByRelatedName(String name,Long id) {
+    public List<SummaryProductResponse> getByRelatedName(String name,Long category_id,Long product_id) {
 
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(" " + id + " Category Not Found"));
-
-        List<Product> products = productRepository.findTop7ByNameContaining(name);
+        Category category = categoryRepository.findById(category_id)
+                .orElseThrow(() -> new ResourceNotFoundException(" " + category_id + " Category Not Found"));
+        String search = name.substring(0,3);
+        List<Product> products = productRepository.findRecommendProduct(search.toLowerCase(),product_id);
 
         if(products.size()<5){
 
-            List<Product> products1 = productRepository.findTop7ByNameContainingOrCategory(name,category);
+            List<Product> products1 = productRepository.findRecommendProductWithCategory(search.toLowerCase(),category_id,product_id);
           return   products1.stream().map(productMapper::productToSummary).toList();
 
         } else {
-
           return   products.stream().map(productMapper::productToSummary).toList();
+
         }
 
 
@@ -258,7 +257,7 @@ public class ProductService {
 
         Pageable pageable = PageRequest.of(page,size,sort);
 
-        Page<Product> products  =  productRepository.findByNameContaining(name,pageable);
+        Page<Product> products  =  productRepository.findByNameContainingIgnoreCaseAndStatus(name,pageable,Status.ACTIVE);
 
        Page<SummaryProductResponse> responses = products.map(productMapper::productToSummary);
 

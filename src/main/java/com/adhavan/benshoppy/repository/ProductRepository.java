@@ -18,26 +18,13 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     List<Product> findByUserAndNameContaining(User user,String name);
 
-
-    @Query(value = "select * from product_table order by created_at desc limit 10",nativeQuery = true)
+    @Query(value = "select * from product_table where status ='ACTIVE' order by created_at desc limit 10",nativeQuery = true)
     List<Product> getLatest();
 
     @Query(value = "select * from product_table where user_id =:id order by created_at desc limit 5",nativeQuery = true)
     List<Product> getLatestForSeller(Long id);
 
-    List<Product> findByCategory(Category category);
-
-
-    List<Product> findTop7ByNameContaining(String name);
-
-
-    List<Product> findTop7ByNameContainingOrCategory(String name, Category category);
-
-
-    Page<Product> findByNameContaining(String name, Pageable pageable);
-
     Long countByStatus(Status status);
-
 
     @Query(value = " select distinct name from product_table where name like CONCAT(:name,'%') limit 10 "
             ,nativeQuery = true )
@@ -48,4 +35,14 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Long countByUser(User user);
 
     Long countByUserAndStatus(User user, Status status);
+
+    List<Product> findByCategoryAndStatus(Category category, Status status);
+
+    Page<Product> findByNameContainingIgnoreCaseAndStatus(String name, Pageable pageable, Status status);
+
+    @Query(value = "select * from product_table where lower(name) like (CONCAT(:search,'%')) and id != :product_Id limit 5", nativeQuery = true)
+    List<Product> findRecommendProduct(String search, Long product_Id);
+
+    @Query(value = "select  * from product_table where lower(name) like ((CONCAT(:search,'%')) or category_id = :category_id)) and id != :product_id limit 5" , nativeQuery = true)
+    List<Product> findRecommendProductWithCategory(String search,Long category_id, Long product_Id);
 }

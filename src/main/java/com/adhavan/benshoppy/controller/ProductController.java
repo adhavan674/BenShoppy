@@ -29,7 +29,7 @@ public class ProductController {
 
     @Operation(summary = "Add Product")
     @PostMapping(value = "/seller/product/{seller_id}/{category_id}" ,
-            consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE) // ok
+            consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
     public String addProduct(@Valid @ModelAttribute CreateProductRequest dto,
                              @PathVariable Long seller_id,
                              @PathVariable Long category_id ) throws IOException {
@@ -50,11 +50,9 @@ public class ProductController {
         return "Product updated successfully";
     }
 
-    // seller and admin
-
     @Operation(summary = "Update Product Status", description = "this API can access by SELLER AND ADMIN")
     @PreAuthorize("hasAnyRole('ADMIN',SELLER')")
-    @PatchMapping("/product/{product_id}/status") // ok
+    @PatchMapping("/product/{product_id}/status")
     public String updateProductStatus(@PathVariable Long product_id, @RequestBody UpdateStatusRequest dto){
 
         productService.updateProductStatus(product_id,dto);
@@ -63,7 +61,7 @@ public class ProductController {
 
     }
     @Operation(summary = "Update price for a Product")
-    @PatchMapping("/seller/{product_id}/price") // ok
+    @PatchMapping("/seller/{product_id}/price")
     public String updateProductPrice(@PathVariable Long product_id,@Valid @RequestBody UpdateProductPrice dto){
            productService.updateProductPrice(product_id,dto);
            return " product price updated ";
@@ -79,13 +77,13 @@ public class ProductController {
 
     }
     @Operation(summary = "get Seller All Products")
-    @GetMapping("/seller/{seller_id}/products") //ok
+    @GetMapping("/seller/{seller_id}/products")
     public List<SummaryProductResponse> getProducts(@PathVariable Long seller_id){
        return productService.getProducts(seller_id);
     }
 
     @Operation(summary = "latest Products added by seller")
-    @GetMapping("seller/{seller_id}/latest") // ok
+    @GetMapping("seller/{seller_id}/latest")
     public List<SummaryProductResponse> getLatestAddedProduct(@PathVariable Long seller_id){
 
         return productService.getLatestAdded(seller_id);
@@ -100,7 +98,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Get Products by status")
-    @GetMapping("/seller/{seller_id}") // ok
+    @GetMapping("/seller/{seller_id}")
     public List<SummaryProductResponse> getProductByStatus(@RequestParam Status status,@PathVariable Long seller_id){
 
       return productService.getProductByStatus(seller_id,status);
@@ -109,7 +107,7 @@ public class ProductController {
 
 
     @Operation(summary = "Full details about product")
-    @GetMapping("/public/{product_id}/details") // ok
+    @GetMapping("/public/{product_id}/details")
     public DetailsProductResponse getProductDetails(@PathVariable Long product_id){
 
        return productService.getProductDetails(product_id);
@@ -138,13 +136,15 @@ public class ProductController {
         return productService.getProductByCategory(category_id);
     }
 
-    // need to dubug this
+   // need debug
 
     @Operation(summary = "Related product when viewing full details ")
-    @GetMapping("/public/related")
-    public List<SummaryProductResponse> getRelatedProduct(@RequestParam String name,@RequestParam Long category_id){
+    @GetMapping("/public/related/{product_id}/{category_id}")
+    public List<SummaryProductResponse> getRelatedProduct(@RequestParam String name,
+                                                          @PathVariable Long product_id ,
+                                                          @PathVariable Long category_id){
         
-        return productService.getByRelatedName(name,category_id);
+        return productService.getByRelatedName(name,category_id,product_id);
 
     }
 
