@@ -10,7 +10,7 @@ import lombok.Data;
 public class SignupRequest {
 
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z]+$", message = " name must be letter ")
+    @Pattern(regexp = "^[A-Za-z ]+$", message = " name must be letter ")
     @Size(min = 3,max = 20)
     private String name;
 

@@ -19,18 +19,18 @@ public class CreateProductRequest {
     @NotBlank
     private String name;
     @Positive
-    @Min(1)
     @NotNull
     private Double price;
-    @Positive
-    @Min(0)
+    @PositiveOrZero
     @NotNull
     private Integer stock;
     @NotBlank
     @Size(min = 5 ,max = 500)
     private String description;
-
+    @NotNull
     private MultipartFile thumbnail;
+    @NotEmpty
+    @Size(min =  3)
     private List<MultipartFile> images;
 
 }
