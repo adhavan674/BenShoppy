@@ -39,7 +39,7 @@ public class SecurityConfig {
                                 .requestMatchers("/images/**","/seller/**").hasRole("SELLER")
                                 .requestMatchers("/admin/**","/category/**").hasRole("ADMIN")
                                 .requestMatchers("/address/**").hasAllAuthorities("USER","SELLER")
-                                .requestMatchers("/product/{product_id}/status").hasAllRoles("SELLER","ADMIN")
+                                .requestMatchers("/product/{product_id}/status").hasAllAuthorities("SELLER","ADMIN")
                                  .requestMatchers("/productImage/**","/categoryImage/**","/thumbnail/**").permitAll()
                                         .anyRequest().authenticated())
                 .exceptionHandling(ex

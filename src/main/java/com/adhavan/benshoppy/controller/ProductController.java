@@ -49,7 +49,6 @@ public class ProductController {
     }
 
     @Operation(summary = "Update Product Status", description = "this API can access by SELLER AND ADMIN")
-    @PreAuthorize("hasAnyRole('ADMIN',SELLER')")
     @PatchMapping("/product/{product_id}/status")
     public String updateProductStatus(@PathVariable Long product_id, @RequestBody UpdateStatusRequest dto){
 
