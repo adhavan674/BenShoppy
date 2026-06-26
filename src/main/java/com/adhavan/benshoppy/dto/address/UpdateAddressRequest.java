@@ -1,22 +1,25 @@
 package com.adhavan.benshoppy.dto.address;
 
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
 public class UpdateAddressRequest {
 
-    @Pattern(regexp = "^[0-9]{10}$",message = " number is invalid , enter proper 10 digits number")
+
+    @Min(value = 1000000000L)
+    @Max(value = 9999999999L)
     private Long number;
 
     @NotEmpty
     @Size(min = 15,message = " enter address correctly")
     private String address;
 
-    @Pattern(regexp = "^[0-9]{6}$", message = " pin code must enter correctly")
+
+
+    @Min(value = 100000)
+    @Max(value = 999999)
     private Integer pinCode;
 
 }

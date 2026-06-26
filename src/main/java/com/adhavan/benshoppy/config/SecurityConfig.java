@@ -35,9 +35,11 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/auth/**","/public/**","/swagger-ui/**","/v3/**").permitAll()
-                                .requestMatchers("/watchlist/**","/cart/**","/order/**","/user/**","/address/**").hasRole("USER")
-                                .requestMatchers("/images/**","/seller/**","/address/**").hasRole("SELLER")
+                                .requestMatchers("/watchlist/**","/cart/**","/order/**","/user/**").hasRole("USER")
+                                .requestMatchers("/images/**","/seller/**").hasRole("SELLER")
                                 .requestMatchers("/admin/**","/category/**").hasRole("ADMIN")
+                                .requestMatchers("/address/**").hasAllAuthorities("USER","SELLER")
+                                .requestMatchers("/product/{product_id}/status").hasAllRoles("SELLER","ADMIN")
                                  .requestMatchers("/productImage/**","/categoryImage/**","/thumbnail/**").permitAll()
                                         .anyRequest().authenticated())
                 .exceptionHandling(ex
