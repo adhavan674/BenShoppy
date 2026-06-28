@@ -38,8 +38,8 @@ public class SecurityConfig {
                                 .requestMatchers("/watchlist/**","/cart/**","/order/**","/user/**").hasRole("USER")
                                 .requestMatchers("/images/**","/seller/**").hasRole("SELLER")
                                 .requestMatchers("/admin/**","/category/**").hasRole("ADMIN")
-                                .requestMatchers("/address/**").hasAllAuthorities("USER","SELLER")
-                                .requestMatchers("/product/{product_id}/status").hasAllAuthorities("SELLER","ADMIN")
+                                .requestMatchers("/address/**").hasAnyRole("USER","SELLER")
+                                .requestMatchers("/product/{product_id}/status").hasAnyRole("SELLER","ADMIN")
                                  .requestMatchers("/productImage/**","/categoryImage/**","/thumbnail/**").permitAll()
                                         .anyRequest().authenticated())
                 .exceptionHandling(ex
