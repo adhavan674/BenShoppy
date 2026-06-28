@@ -44,10 +44,10 @@ public class CategoryService {
      Category category =  categoryMapper.createCategoryRequestToCategory(dto);
 
 
-     String folder ="uploads/categoryImage";
+     String folder ="images/categoryImage";
      String filename = UUID.randomUUID() + "_" + dto.getImg().getOriginalFilename();
 
-      Path path = Paths.get(folder,filename);  //   uploads/categoryImage/khfgsdhfg_adhav.jpg
+      Path path = Paths.get(folder,filename);  //   images/categoryImage/khfgsdhfg_adhav.jpg
       dto.getImg().transferTo(path);
 
      category.setUrl("/categoryImage/"+ filename);  //  categoryImage/efhidgd_adhav.jpg
@@ -73,14 +73,14 @@ public class CategoryService {
             }
 
 
-        String folder = "uploads" ;
+        String folder = "images" ;
         String fileName = category.getUrl();
-        Path path = Paths.get(folder,fileName); // uploads + /categoryImage/hgsjdfgd_adhav.pgb
+        Path path = Paths.get(folder,fileName); // images + /categoryImage/hgsjdfgd_adhav.pgb
 
         Files.deleteIfExists(path);
 
         String newFileName = UUID.randomUUID() + "_" + dto.getImage().getOriginalFilename();
-        String newFolder = "uploads/categoryImage";
+        String newFolder = "images/categoryImage";
         Path path1 = Paths.get(newFolder,newFileName);
         dto.getImage().transferTo(path1);
 

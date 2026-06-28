@@ -66,7 +66,7 @@ public class ProductService {
         newproduct.setCategory(category);
         newproduct.setStatus(Status.ACTIVE);
 
-        String folder = "uploads/thumbnail";
+        String folder = "images/thumbnail";
         String filename = UUID.randomUUID() + "_" + dto.getThumbnail().getOriginalFilename();
         Path path = Paths.get(folder, filename);
         dto.getThumbnail().transferTo(path);
@@ -77,7 +77,7 @@ public class ProductService {
         for (MultipartFile image : dto.getImages()) {
 
 
-            String imageFolder = "uploads/productImage";
+            String imageFolder = "images/productImage";
             String imageName = UUID.randomUUID() + "_" + image.getOriginalFilename();
             Path path1 = Paths.get(imageFolder, imageName);
             image.transferTo(path1);
@@ -108,7 +108,6 @@ public class ProductService {
 
        Product product = productRepository.findById(id)
                            .orElseThrow(() -> new ResourceNotFoundException(" " +  id + " Product id Not Found"));
-       String categoryName = product.getCategory().getName();
        Category category = product.getCategory();
        String user = product.getUser().getName();
        List<ProductImage> images = productImageRepository.findByProduct(product);
@@ -176,7 +175,7 @@ public class ProductService {
         if(dto.getThumbnail()!=null && !dto.getThumbnail().isEmpty()){
 
             String oldFile = product.getThumbnail().substring(10);
-            String folder = "uploads/thumbnail";
+            String folder = "images/thumbnail";
             Path path= Paths.get(folder,oldFile);
             Files.deleteIfExists(path);
 

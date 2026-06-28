@@ -40,7 +40,7 @@ public class ProductImageService {
                         .orElseThrow(() ->
                                 new ProductImageNotFound("image not found"));
         String filename = productImage.getUrl();
-        String folder = "uploads";
+        String folder = "images";
         Path path = Paths.get(folder,filename);
         Files.deleteIfExists(path);
 
@@ -63,14 +63,14 @@ public class ProductImageService {
         }
 
 
-        String folder = "uploads/productImage";
+        String folder = "images/productImage";
         String oldFileName = productImage.getUrl().substring(13);
         Path path = Paths.get(folder,oldFileName);
         Files.deleteIfExists(path);
 
 
 
-        String imageFolder = "uploads/productImage";
+        String imageFolder = "images/productImage";
         String imageName = UUID.randomUUID()+"_"+image.getOriginalFilename();
         Path path1 = Paths.get(imageFolder,imageName);
         image.transferTo(path1);
@@ -133,7 +133,7 @@ public class ProductImageService {
                 }
 
 
-                String imageFolder = "uploads/productImage";
+                String imageFolder = "images/productImage";
                 String imageName = UUID.randomUUID()+"_"+image.getOriginalFilename();
                 Path path1 = Paths.get(imageFolder,imageName);
                 image.transferTo(path1);
