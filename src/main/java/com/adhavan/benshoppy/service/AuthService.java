@@ -12,7 +12,6 @@ import com.adhavan.benshoppy.entity.User;
 import com.adhavan.benshoppy.globalexception.customexception.ResourceAlreadyExistsException;
 import com.adhavan.benshoppy.globalexception.customexception.ResourceNotFoundException;
 import com.adhavan.benshoppy.mapper.AuthMapper;
-import com.adhavan.benshoppy.mapper.UserMapper;
 import com.adhavan.benshoppy.repository.CartRepository;
 import com.adhavan.benshoppy.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -44,11 +43,9 @@ public class AuthService {
     @Autowired
     private CartRepository cartRepository;
 
-    @Autowired
-    private UserMapper userMapper;
     public void addUser(SignupRequest dto){
 
-        Optional<User> user = userRepository.findBymail(dto.getMail());
+        Optional<User> user = userRepository.findByMail(dto.getMail());
 
         if(user.isPresent()){
             throw new ResourceAlreadyExistsException( " " + dto.getMail() + " : Mail is already registered , please Login" );
@@ -71,7 +68,7 @@ public class AuthService {
 
     public void addSeller(SignupRequest dto){
 
-        Optional<User> user = userRepository.findBymail(dto.getMail());
+        Optional<User> user = userRepository.findByMail(dto.getMail());
 
         if(user.isPresent()){
             throw new ResourceAlreadyExistsException(" " +  dto.getMail() + " : Mail is already registered , please Login" );
@@ -97,7 +94,7 @@ public class AuthService {
 
         if(authentication.isAuthenticated()){
 
-          User user =  userRepository.findBymail(dto.getMail())
+          User user =  userRepository.findByMail(dto.getMail())
                   .orElseThrow(() -> new ResourceNotFoundException( dto.getMail() +  " Entered Mail is Wrong "));
           String token =  jwtUtil.generateToken( dto.getMail() , user.getId() , user.getRole().name());
           String name = user.getName();
@@ -117,7 +114,7 @@ public class AuthService {
 
     public void addAdmin(@Valid SignupRequest dto) {
 
-        Optional<User> user = userRepository.findBymail(dto.getMail());
+        Optional<User> user = userRepository.findByMail(dto.getMail());
 
         if(user.isPresent()){
             throw new ResourceAlreadyExistsException(" " +  dto.getMail() + " : Mail is already registered , please Login" );
