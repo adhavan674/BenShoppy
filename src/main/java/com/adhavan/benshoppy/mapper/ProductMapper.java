@@ -6,7 +6,6 @@ import com.adhavan.benshoppy.dto.product.ProductImageResponse;
 import com.adhavan.benshoppy.dto.product.SummaryProductResponse;
 import com.adhavan.benshoppy.entity.Product;
 import com.adhavan.benshoppy.entity.ProductImage;
-import com.adhavan.benshoppy.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
