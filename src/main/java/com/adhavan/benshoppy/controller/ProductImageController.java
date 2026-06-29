@@ -30,7 +30,7 @@ public class ProductImageController {
         @PatchMapping(value = "/{product_image_id}" ,
                 consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
         public String updateImage(@PathVariable Long product_image_id,
-                                  @ModelAttribute MultipartFile image)
+                                  @RequestParam MultipartFile image)
                 throws IOException {
 
 
@@ -49,7 +49,7 @@ public class ProductImageController {
         @PostMapping(value = "/{product_id}" ,
                 consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
         public String addImages(@PathVariable Long product_id,
-                                @ModelAttribute List<MultipartFile> images)
+                                @RequestParam List<MultipartFile> images)
                 throws IOException {
 
             productImageService.addImages(product_id ,images);

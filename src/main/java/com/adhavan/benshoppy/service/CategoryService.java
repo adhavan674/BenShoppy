@@ -92,9 +92,14 @@ public class CategoryService {
 
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws IOException {
         Category category =  categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(" " + id + " : Category not found"));
+
+        String path1 = "images";
+        String path2 = category.getUrl(); //  /categoryImage/wjgdwjg.jpg
+        Path path = Paths.get(path1,path2);
+        Files.deleteIfExists(path);
         categoryRepository.deleteById(id);
     }
 

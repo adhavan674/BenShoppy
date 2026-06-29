@@ -58,7 +58,7 @@ public class CategoryController {
 
 
     @DeleteMapping("/admin/category/{category_id}")
-    public String deleteCategory(@PathVariable Long category_id){
+    public String deleteCategory(@PathVariable Long category_id) throws IOException {
         categoryService.deleteById(category_id);
 
         return "category deleted successFully";

@@ -126,11 +126,20 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
+    public void deleteProduct(Long id) throws IOException {
 
-       Product product =  productRepository.findById(id)
+        Product product =  productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException( " "+ id + " Product Not Found"));
-
+        String path1 = "images";
+        String thumbnail = product.getThumbnail();
+        Path pathForThumbnail = Paths.get(path1,thumbnail);
+        Files.deleteIfExists(pathForThumbnail);
+        List<ProductImage> productImages = productImageRepository.findByProduct(product);
+        for (ProductImage productImage : productImages){
+           String image = productImage.getUrl();
+           Path pathForProductImage = Paths.get(path1,image);
+           Files.deleteIfExists(pathForProductImage);
+        }
         productImageRepository.deleteByProduct(product);
         productRepository.deleteById(id);
 
