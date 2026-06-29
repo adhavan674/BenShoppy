@@ -37,7 +37,7 @@ public class CategoryService {
          throw new ResourceAlreadyExistsException(" " + dto.getName() + " : Category already exist ");
      }
 
-     String contentType = dto.getImg().getContentType();
+     String contentType = dto.getImage().getContentType();
      if(contentType == null || !contentType.startsWith("image/") ){
          throw new FileFormatWrongException(" upload image format only or upload image ");
      }
@@ -45,10 +45,10 @@ public class CategoryService {
 
 
      String folder ="images/categoryImage";
-     String filename = UUID.randomUUID() + "_" + dto.getImg().getOriginalFilename();
+     String filename = UUID.randomUUID() + "_" + dto.getImage().getOriginalFilename();
 
       Path path = Paths.get(folder,filename);  //   images/categoryImage/khfgsdhfg_adhav.jpg
-      dto.getImg().transferTo(path);
+      dto.getImage().transferTo(path);
 
      category.setUrl("/categoryImage/"+ filename);  //  categoryImage/efhidgd_adhav.jpg
      categoryRepository.save(category);
