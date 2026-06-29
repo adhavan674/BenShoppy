@@ -11,6 +11,6 @@ public class CreateCategoryRequest {
     @NotBlank(message = "Name must Enter valid or Should not be null")
     private String name;
     @NotNull
-    private MultipartFile img;
+    private MultipartFile image;
 
 }
