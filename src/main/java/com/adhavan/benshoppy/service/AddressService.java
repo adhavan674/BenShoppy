@@ -50,7 +50,7 @@ public class AddressService {
 
         List<Address> addresses = addressRepository.findByUser(user);
 
-      // return addresses.stream().map(addressMapper::AddressToAddressResponse).toList();
+
         List<AddressResponse> responses = new ArrayList<>();
         for (Address address : addresses){
           AddressResponse addressResponse = new AddressResponse();
@@ -76,7 +76,7 @@ public class AddressService {
      }
 
      if(dto.getPinCode()!=null){
-         address.setNumber(dto.getNumber());
+         address.setPinCode(dto.getPinCode());
      }
 
      addressRepository.save(address);

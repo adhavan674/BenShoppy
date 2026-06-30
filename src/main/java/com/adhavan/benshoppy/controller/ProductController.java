@@ -18,7 +18,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-
+    // admin
+    @GetMapping("/admin/products")
+    public List<SummaryProductResponse> getProducts(){
+        return productService.getProducts();
+    }
 
     @PostMapping(value = "/seller/product/{seller_id}/{category_id}" ,
             consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -66,10 +70,15 @@ public class ProductController {
         return "successfully product deleted ";
 
     }
-
+    // get products of seller
     @GetMapping("/seller/{seller_id}/products")
-    public List<SummaryProductResponse> getProducts(@PathVariable Long seller_id){
-       return productService.getProducts(seller_id);
+    public List<SummaryProductResponse> getProductsOfSeller(@PathVariable Long seller_id){
+       return productService.getProductsForSeller(seller_id);
+    }
+    // admin
+    @GetMapping("/admin/{seller_id}/products")
+    public List<SummaryProductResponse> getProductsOfSellerAdmin(@PathVariable Long seller_id){
+        return productService.getProductsForSeller(seller_id);
     }
 
 

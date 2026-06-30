@@ -11,7 +11,6 @@ import com.adhavan.benshoppy.mapper.UserMapper;
 import com.adhavan.benshoppy.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -30,25 +29,9 @@ public class UserService {
     @Autowired
     private AddressRepository addressRepository;
 
+
     @Autowired
     private OrderRepository orderRepository;
-
-    @Autowired
-    private OrderItemRepository orderItemRepository;
-
-    public List<SummaryUserOrSellerResponse> searchUser(String name) {
-
-        List<User> users = userRepository.findByNameAndRole(name,Role.USER);
-        return users.stream().map(userMapper::UserToSummary).toList();
-
-    }
-
-
-    public List<SummaryUserOrSellerResponse> searchSeller(String name) {
-        List<User> users = userRepository.findByNameAndRole(name,Role.SELLER);
-        return users.stream().map(userMapper::UserToSummary).toList();
-    }
-
 
     public DetailsUserOrSellerResponse detailsUserOrSeller(Long id) {
 
@@ -67,15 +50,6 @@ public class UserService {
 
     }
 
-    public List<SummaryUserOrSellerResponse> getActiveOrBlockedUser(Status status) {
-        List<User> users = userRepository.findByStatusAndRole(status,Role.USER);
-        return users.stream().map(userMapper::UserToSummary).toList();
-    }
-
-    public List<SummaryUserOrSellerResponse> getActiveOrBlockedSeller(Status status) {
-        List<User> users = userRepository.findByStatusAndRole(status,Role.SELLER);
-        return users.stream().map(userMapper::UserToSummary).toList();
-    }
 
     public void updateStatusUserOrSeller(Long id, UpdateStatusRequest dto) {
         User user = userRepository.findById(id)
@@ -110,14 +84,25 @@ public class UserService {
          Long activeProduct = productRepository.countByUserAndStatus(user,Status.ACTIVE);
          Long inactiveProduct = productRepository.countByUserAndStatus(user,Status.INACTIVE);
 
-         List<Product> products = productRepository.findByUser(user);
 
-     //    Long totalOrders = orderItemRepository.countByProductin(products);
 
       return new SellerCountResponse(totalProduct,activeProduct,inactiveProduct);
 
 
     }
+
+    public List<SummaryUserOrSellerResponse> getUsers(){
+     List<User> users  = userRepository.findByRole(Role.USER);
+     return users.stream().map(userMapper::UserToSummary).toList();
+    }
+
+    public List<SummaryUserOrSellerResponse> getSellers(){
+        List<User> users  = userRepository.findByRole(Role.SELLER);
+        return users.stream().map(userMapper::UserToSummary).toList();
+    }
+
+
+
 }
 
 

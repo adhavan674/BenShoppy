@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -130,19 +131,25 @@ public class ProductService {
 
         Product product =  productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException( " "+ id + " Product Not Found"));
-        String path1 = "images";
+        String base = "images";
         String thumbnail = product.getThumbnail();
-        Path pathForThumbnail = Paths.get(path1,thumbnail);
-        Files.deleteIfExists(pathForThumbnail);
+        Path pathForThumbnail = Paths.get(base,thumbnail);
+        List<Path> pathsForImages = new ArrayList<>();
         List<ProductImage> productImages = productImageRepository.findByProduct(product);
         for (ProductImage productImage : productImages){
            String image = productImage.getUrl();
-           Path pathForProductImage = Paths.get(path1,image);
-           Files.deleteIfExists(pathForProductImage);
+           Path pathForProductImage = Paths.get(base,image);
+           pathsForImages.add(pathForProductImage);
         }
-        productImageRepository.deleteByProduct(product);
-        productRepository.deleteById(id);
 
+        productImageRepository.deleteByProduct(product);
+        productImageRepository.flush();
+        productRepository.deleteById(id);
+        productRepository.flush();
+        Files.deleteIfExists(pathForThumbnail);
+        for (Path path : pathsForImages){
+            Files.deleteIfExists(path);
+        }
     }
 
     public void updateProductStatus(Long id, UpdateStatusRequest dto) {
@@ -237,7 +244,7 @@ public class ProductService {
 
     public List<SummaryProductResponse> getByRelatedName(String name,Long category_id,Long product_id) {
 
-        Category category = categoryRepository.findById(category_id)
+        categoryRepository.findById(category_id)
                 .orElseThrow(() -> new ResourceNotFoundException(" " + category_id + " Category Not Found"));
         String search = name.substring(0,3);
         List<Product> products = productRepository.findRecommendProduct(search.toLowerCase(),product_id);
@@ -284,11 +291,17 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<SummaryProductResponse> getProducts(Long id) {
+    public List<SummaryProductResponse> getProductsForSeller(Long id) {
       User user = userRepository.findById(id)
               .orElseThrow(() -> new ResourceNotFoundException(" " + id + " User id not found "));
       List<Product> products = productRepository.findByUser(user);
       return products.stream().map(productMapper::productToSummary).toList();
 
     }
+
+    public List<SummaryProductResponse> getProducts(){
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(productMapper::productToSummary).toList();
+    }
+
 }

@@ -12,7 +12,7 @@ public class UpdateAddressRequest {
     @Max(value = 9999999999L)
     private Long number;
 
-    @NotEmpty
+
     @Size(min = 15,message = " enter address correctly")
     private String address;
 
