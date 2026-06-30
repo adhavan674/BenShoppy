@@ -138,6 +138,7 @@ public class OrderService {
              ord.setPrice(orderItem.getPrice() * orderItem.getQuantity());
              ord.setPayment(orderItem.getOrder().getPayment());
              ord.setQuantity(orderItem.getQuantity());
+             ord.setPlacedAt(orderItem.getOrder().getPlacedAt());
              ord.setImg(orderItem.getProduct().getThumbnail());
              ord.setAddress(addressMapper.AddressToAddressResponse(orderItem.getOrder().getAddress()));
              summary.add(ord);
@@ -168,6 +169,7 @@ public class OrderService {
         oneOrder.setPrice(orderItem.getPrice()*orderItem.getQuantity());
         oneOrder.setQuantity(orderItem.getQuantity());
         oneOrder.setStatus(orderItem.getStatus());
+        oneOrder.setPlacedAt(orderItem.getOrder().getPlacedAt());
         oneOrder.setPayment(orderItem.getOrder().getPayment());
         Order order  = orderItem.getOrder();
         Address address = order.getAddress();

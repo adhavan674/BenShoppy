@@ -18,7 +18,7 @@ public class DetailsProductResponse {
     private Status status;
     private String thumbnail;
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
     private String seller_name;
     private String category_name;
     private Long category_id;

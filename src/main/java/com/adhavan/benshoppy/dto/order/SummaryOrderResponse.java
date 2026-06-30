@@ -5,6 +5,8 @@ import com.adhavan.benshoppy.entity.OrderStatus;
 import com.adhavan.benshoppy.entity.Payment;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class SummaryOrderResponse {
 
@@ -17,5 +19,6 @@ public class SummaryOrderResponse {
     private OrderStatus status;
     private Payment payment;
     private AddressResponse address;
+    private LocalDateTime placedAt;
 
 }

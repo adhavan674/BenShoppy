@@ -33,7 +33,5 @@ public class OrderItem {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @UpdateTimestamp
-    private LocalDateTime deliveryAt;
 
 }
