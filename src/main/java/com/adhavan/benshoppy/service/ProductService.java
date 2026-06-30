@@ -291,17 +291,20 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<SummaryProductResponse> getProductsForSeller(Long id) {
+    public Page<SummaryProductResponse> getProductsForSeller(Long id,int page,int size) {
       User user = userRepository.findById(id)
               .orElseThrow(() -> new ResourceNotFoundException(" " + id + " User id not found "));
-      List<Product> products = productRepository.findByUser(user);
-      return products.stream().map(productMapper::productToSummary).toList();
+      Pageable pageable = PageRequest.of(page,size);
+      Page<Product> products = productRepository.findByUser(user,pageable);
+      return  products.map(productMapper::productToSummary);
+
 
     }
 
-    public List<SummaryProductResponse> getProducts(){
-        List<Product> products = productRepository.findAll();
-        return products.stream().map(productMapper::productToSummary).toList();
+    public Page<SummaryProductResponse> getProducts(int page,int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(productMapper::productToSummary);
     }
 
 }

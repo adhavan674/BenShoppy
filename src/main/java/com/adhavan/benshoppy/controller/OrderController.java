@@ -35,7 +35,7 @@ public class OrderController {
         orderService.cancelOrder(order_item_id);
         return "order cancelled ";
     }
-
+    // user view orders
     @GetMapping("/order/{user_id}/summary")
     public List<SummaryOrderResponse> getOrdersForUser(@PathVariable Long user_id) {
 

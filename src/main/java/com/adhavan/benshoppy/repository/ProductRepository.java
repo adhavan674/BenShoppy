@@ -30,8 +30,8 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             ,nativeQuery = true )
     List<String> textSuggest(@Param("name") String name);
 
+    Page<Product> findByUser(User user, Pageable pageable);
     List<Product> findByUser(User user);
-
     Long countByUser(User user);
 
     Long countByUserAndStatus(User user, Status status);

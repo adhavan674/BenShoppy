@@ -18,10 +18,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // admin
-    @GetMapping("/admin/products")
-    public List<SummaryProductResponse> getProducts(){
-        return productService.getProducts();
+    // all products
+    @GetMapping("/public/products")
+    public Page<SummaryProductResponse> getProducts(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "4") int size){
+        return productService.getProducts(page,size);
     }
 
     @PostMapping(value = "/seller/product/{seller_id}/{category_id}" ,
@@ -70,15 +71,19 @@ public class ProductController {
         return "successfully product deleted ";
 
     }
-    // get products of seller
+    // seller view his product
     @GetMapping("/seller/{seller_id}/products")
-    public List<SummaryProductResponse> getProductsOfSeller(@PathVariable Long seller_id){
-       return productService.getProductsForSeller(seller_id);
+    public Page<SummaryProductResponse> getProductsOfSeller(@PathVariable Long seller_id,
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "4") int size){
+       return productService.getProductsForSeller(seller_id,page,size);
     }
-    // admin
+    // admin view seller product
     @GetMapping("/admin/{seller_id}/products")
-    public List<SummaryProductResponse> getProductsOfSellerAdmin(@PathVariable Long seller_id){
-        return productService.getProductsForSeller(seller_id);
+    public Page<SummaryProductResponse> getProductsOfSellerAdmin(@PathVariable Long seller_id,
+                                                                 @RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "4") int size){
+        return productService.getProductsForSeller(seller_id,page,size);
     }
 
 
