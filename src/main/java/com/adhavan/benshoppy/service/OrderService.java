@@ -3,10 +3,7 @@ package com.adhavan.benshoppy.service;
 import com.adhavan.benshoppy.dto.order.SummaryOrderResponse;
 import com.adhavan.benshoppy.dto.order.UpdateOrderStatus;
 import com.adhavan.benshoppy.entity.*;
-import com.adhavan.benshoppy.globalexception.customexception.InsufficientStockException;
-import com.adhavan.benshoppy.globalexception.customexception.OrderAlreadyCancelledException;
-import com.adhavan.benshoppy.globalexception.customexception.OrderAlreadyDeliveredException;
-import com.adhavan.benshoppy.globalexception.customexception.ResourceNotFoundException;
+import com.adhavan.benshoppy.globalexception.customexception.*;
 import com.adhavan.benshoppy.mapper.AddressMapper;
 import com.adhavan.benshoppy.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +51,9 @@ public class OrderService {
         Cart cart = cartRepository.findByUser(user);
         log.info("fetching cartitem using cart");
         List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
+        if(cartItemList.isEmpty()){
+            throw new CartEmptyException("cart is empty cant make orders");
+        }
 
         log.info("order object created");
         Order order = new Order();
