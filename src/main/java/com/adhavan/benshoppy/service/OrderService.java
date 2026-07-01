@@ -5,6 +5,7 @@ import com.adhavan.benshoppy.dto.order.UpdateOrderStatus;
 import com.adhavan.benshoppy.entity.*;
 import com.adhavan.benshoppy.globalexception.customexception.InsufficientStockException;
 import com.adhavan.benshoppy.globalexception.customexception.OrderAlreadyCancelledException;
+import com.adhavan.benshoppy.globalexception.customexception.OrderAlreadyDeliveredException;
 import com.adhavan.benshoppy.globalexception.customexception.ResourceNotFoundException;
 import com.adhavan.benshoppy.mapper.AddressMapper;
 import com.adhavan.benshoppy.repository.*;
@@ -111,6 +112,9 @@ public class OrderService {
         if(orderItem.getStatus()==OrderStatus.CANCELLED){
             throw new OrderAlreadyCancelledException("order already canceller");
         }
+        if(orderItem.getStatus()==OrderStatus.DELIVERED){
+            throw new OrderAlreadyDeliveredException("order already delivered");
+        }
         orderItem.setStatus(OrderStatus.CANCELLED);
         Product product = orderItem.getProduct();
         product.setStock(product.getStock() + orderItem.getQuantity());
@@ -186,7 +190,12 @@ public class OrderService {
 
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(" " + id + " order item not found "));
-        
+        if(orderItem.getStatus()==OrderStatus.CANCELLED){
+            throw new OrderAlreadyCancelledException("order already canceller");
+        }
+        if(orderItem.getStatus()==OrderStatus.DELIVERED){
+            throw new OrderAlreadyDeliveredException("order already delivered");
+        }
         orderItem.setStatus(dto.getOrderStatus());
         orderItemRepository.save(orderItem);
 
